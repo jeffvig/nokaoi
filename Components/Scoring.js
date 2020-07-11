@@ -5,6 +5,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
+import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from "@material-ui/core/TextField";
 import AppBar from '@material-ui/core/AppBar'
@@ -17,6 +18,12 @@ import Button from '@material-ui/core/Button'
 import Grid from '@material-ui/core/Grid';
 import Box from '@material-ui/core/Box';
 import * as constants from '../constants';
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 const theme = createMuiTheme({
     palette: {
@@ -36,6 +43,11 @@ const useStyles = makeStyles((theme) => ({
     width: '33%',
     height: 55,
     fontSize: '25px',
+  },
+  scorecardButton: {
+    width: '33%',
+    height: 55,
+    fontSize: '16px',
   }
 }));
 
@@ -55,6 +67,8 @@ export default function Scoring( { _players, _pars, _holeHandicaps, _leaderboard
   const [par, setPars] = useState(_pars)
   const [hdcp, setHdcps] = useState(_holeHandicaps)
   const [leaderboard, setLeaderboard] = useState(_leaderboard)
+
+  const [open, setOpen] = React.useState(false);
 
   const holeHasZeroScore = (hole, lastPlayer, players) => {
     let retval = false
@@ -199,10 +213,11 @@ export default function Scoring( { _players, _pars, _holeHandicaps, _leaderboard
   const handleNumberButtonClick = (e) => {
     //const currentPlayer = xplayers.map(function(e) { return e.focus; }).indexOf(true)
     switch(e.currentTarget.innerText.toUpperCase()) {
-      case "UNDO":
-        let totals = ''
-        totals += scoreer.player_name
-        alert(totals)
+      case "SCORECARD":
+        // let totals = ''
+        // totals += scoreer.player_name
+        // alert(totals)
+        setOpen(true)
         break;
       case "POST":
         postData()
@@ -227,6 +242,9 @@ export default function Scoring( { _players, _pars, _holeHandicaps, _leaderboard
     }
   }
 
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   const isInFocus = (id) => (xplayers[id].focus === true ? 'contained' : 'outlined')
 
@@ -388,7 +406,7 @@ export default function Scoring( { _players, _pars, _holeHandicaps, _leaderboard
               <Button variant='outlined' className={classes.numberButtons} onClick={handleNumberButtonClick}>9</Button>
             </TableRow>
             <TableRow>
-              <Button variant='outlined' className={classes.numberButtons} onClick={handleNumberButtonClick}>UNDO</Button>
+              <Button variant='outlined' className={classes.scorecardButton} onClick={handleNumberButtonClick}>Scorecard</Button>
               <Button variant='outlined' className={classes.numberButtons} onClick={handleNumberButtonClick}>0</Button>
               <Button variant='outlined' className={classes.numberButtons} onClick={handleNumberButtonClick}>{postButtonText}</Button>
             </TableRow>
@@ -402,7 +420,66 @@ export default function Scoring( { _players, _pars, _holeHandicaps, _leaderboard
       <div>{JSON.stringify(players.partner3)}</div>
       */}
 
-     </ThemeProvider>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        scroll='paper'
+      >
+        <DialogTitle id="scroll-dialog-title">Scorecard</DialogTitle>
+        <DialogContent dividers={scroll === 'paper'}>
+          <DialogContentText
+            id="scroll-dialog-description"
+            tabIndex={-1}
+          >
+            <Table size='small'>
+              <TableBody>
+                <TableRow>
+                  {par.map((par, hole) => { return <TableCell >{hole > 0 ? hole : 'Hole'}</TableCell> })}
+                </TableRow>
+                <TableRow>
+                  {par.map((par, hole) => { return <TableCell>{par > 0 ? par : 'Par'}</TableCell> })}
+                </TableRow>
+                <TableRow>
+                  {hdcp.map((hdcp, hole) => { return <TableCell>{hdcp > 0 ? hdcp : 'HDCP'}</TableCell> })}
+                </TableRow>
+                <TableRow>
+                  {players.scorer.score.map((gross, hole) => { 
+                    return <TableCell>{hole > 0 ? gross : players.scorer.player_name}</TableCell> })
+                  }
+                </TableRow>
+                {players.partner1.player_name.length > 0 && 
+                  <TableRow>
+                    {players.partner1.score.map((gross, hole) => { 
+                      return <TableCell>{hole > 0 ? gross : players.partner1.player_name}</TableCell> })
+                    }
+                  </TableRow>
+                }
+                {players.partner2.player_name.length > 0 && 
+                  <TableRow>
+                    {players.partner2.score.map((gross, hole) => { 
+                      return <TableCell>{hole > 0 ? gross : players.partner2.player_name}</TableCell> })
+                    }
+                  </TableRow>
+                }
+                {players.partner3.player_name.length > 0 && 
+                  <TableRow>
+                    {players.partner3.score.map((gross, hole) => { 
+                      return <TableCell>{hole > 0 ? gross : players.partner3.player_name}</TableCell> })
+                    }
+                  </TableRow>
+                }
+              </TableBody>
+            </Table>
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} color="primary">
+            Close
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+    </ThemeProvider>
     </Fragment>
   )
 }

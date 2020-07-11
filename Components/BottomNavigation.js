@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import Scoring from './Scoring'
-import Scorecard from './Scorecard'
 import Leaderboard from './Leaderboard'
 import Settings from './Settings'
 import * as constants from '../constants';
@@ -43,7 +42,7 @@ export default function BottomNavigation() {
 
   const classes = useStyles()
 
-  const [value, setValue] = useState(3)
+  const [value, setValue] = useState(2)
   const [response, setResponse] = React.useState(null)
   const [error, setError] = React.useState(null)
   const [empty, setEmpty] = useState(false)
@@ -229,21 +228,14 @@ export default function BottomNavigation() {
                               onLeaderboardChange={(e) => { onleaderboardchanges(e) }} 
                             /> 
             } 
-            {value === 1 && <Scorecard 
+            {value === 1 && <Leaderboard 
                               _leaderboard={leaderboard}
                               _flight={players.scorer.division}
                               _pars={pars}
                               _holeHandicaps={hdcps}
                               onLeaderboardChange={(e) => { onleaderboardchanges(e) }} 
                             /> } 
-            {value === 2 && <Leaderboard 
-                              _leaderboard={leaderboard}
-                              _flight={players.scorer.division}
-                              _pars={pars}
-                              _holeHandicaps={hdcps}
-                              onLeaderboardChange={(e) => { onleaderboardchanges(e) }} 
-                            /> } 
-            {value === 3 && <Settings 
+            {value === 2 && <Settings 
                               _players={players} 
                               allPlayers={allPlayers} 
                               onPlayersChange={(e) => { onplayerschanges(e) }} 
@@ -260,8 +252,7 @@ export default function BottomNavigation() {
           showLabels
           className={classes.root}
         >
-          <BottomNavigationAction label="Scores"/>
-          <BottomNavigationAction label="Totals"/>
+          <BottomNavigationAction label="Scoring"/>
           <BottomNavigationAction label="Leaderboard"/>
           <BottomNavigationAction label="Settings"/>
         </BottomNavigation>
