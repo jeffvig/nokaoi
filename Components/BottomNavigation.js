@@ -42,7 +42,7 @@ export default function BottomNavigation() {
 
   const classes = useStyles()
 
-  const [value, setValue] = useState(1)
+  const [value, setValue] = useState(2)
   const [response, setResponse] = React.useState(null)
   const [error, setError] = React.useState(null)
   const [empty, setEmpty] = useState(false)
@@ -62,21 +62,22 @@ export default function BottomNavigation() {
                                           partner1: {...constants.empty_player}, 
                                           partner2: {...constants.empty_player}, 
                                           partner3: {...constants.empty_player}})
+  const [leaderboard, setLeaderboard] = useState([])
 
-  const [rowEdit, setRowEdit] = useState({
-    rowEdit: { "1x0": [1, 1, 1, 1, 1] }
-  });
+  // const [rowEdit, setRowEdit] = useState({
+  //   rowEdit: { "1x0": [1, 1, 1, 1, 1] }
+  // });
 
   function onClick() {
-    setRowEdit(prevState => ({
-      ...prevState,
-      rowEdit: {
-        ...prevState.rowEdit,
-        "1x0": prevState.rowEdit["1x0"].map((row, index) =>
-          index === 1 ? 0 : row
-        )
-      }
-    }))
+    // setRowEdit(prevState => ({
+    //   ...prevState,
+    //   rowEdit: {
+    //     ...prevState.rowEdit,
+    //     "1x0": prevState.rowEdit["1x0"].map((row, index) =>
+    //       index === 1 ? 0 : row
+    //     )
+    //   }
+    // }))
 
     const holenum = 18
     const playernum = 'partner3'
@@ -123,7 +124,7 @@ export default function BottomNavigation() {
           setParEmpty(false)
           const newPars = []
           for (let i = 0; i < 19; i++ ) {
-            newPars.push(json.data[i].par)
+            newPars.push(parseInt(json.data[i].par))
           }
           console.log('newPars: ', newPars, newPars[1], newPars[10])
           setPars(newPars)
@@ -136,27 +137,27 @@ export default function BottomNavigation() {
   }
   
   const loadHoleHandicaps = async () => {
-    setHdcpLoading(true);
+    setHdcpsLoading(true);
     try {
         const res = await fetch("https://jeffvig.heliohost.org/golf/api/score/read_hole_handicaps.php", {});
         const json = await res.json();
-        setHdcpLoading(false);
-        setHdcpResponse(json);
+        setHdcpsLoading(false);
+        setHdcpsResponse(json);
         if (json.hasOwnProperty('message')) {
-          setHdcpEmpty(true);
+          setHdcpsEmpty(true);
         } else {
-          setHdcpEmpty(false)
+          setHdcpsEmpty(false)
           const newHdcps = []
           for (let i = 0; i < 19; i++ ) {
-            newHdcps.push(json.data[i].hole_handicap)
+            newHdcps.push(parseInt(json.data[i].hole_handicap))
           }
-          console.log('newHdcps: ', newHdcps, newHdcps[1], newHdcps[10])
+          //console.log('newHdcps: ', newHdcps, newHdcps[1], newHdcps[10])
           setHdcps(newHdcps)
           localStorage.setItem(constants.NoKaOiHoleHandicaps, JSON.stringify(newHdcps));
         }
       } catch (error) {
         console.log('hdcp fetching error: ', error)
-        setHdcpError(error);
+        setHdcpsError(error);
       }
   }
   
@@ -208,6 +209,11 @@ export default function BottomNavigation() {
     setValue(0)
   }
     
+  const onleaderboardchanges = (_leaderboard) => {
+    console.log('bottomNav received new leaderboard: ', JSON.stringify(_leaderboard))
+    setLeaderboard(_leaderboard)
+  }
+    
   return (
     <Fragment>
      <ThemeProvider theme={theme}>
@@ -216,13 +222,23 @@ export default function BottomNavigation() {
             {value === 0 && <Scoring 
                               _players={players} 
                               _pars={pars}
-                              _holdHandicaps={hdcps}/> 
+                              _holeHandicaps={hdcps}
+                              onPlayersChange={(e) => { onplayerschanges(e) }} 
+                              onLeaderboardChange={(e) => { onleaderboardchanges(e) }} 
+                            /> 
             } 
-            {value === 1 && <Leaderboard /> } 
+            {value === 1 && <Leaderboard 
+                              _leaderboard={leaderboard}
+                              _flight={players.scorer.division}
+                              _pars={pars}
+                              _holeHandicaps={hdcps}
+                              onLeaderboardChange={(e) => { onleaderboardchanges(e) }} 
+                            /> } 
             {value === 2 && <Settings 
                               _players={players} 
                               allPlayers={allPlayers} 
-                              onPlayersChange={(e) => { onplayerschanges(e) }} /> 
+                              onPlayersChange={(e) => { onplayerschanges(e) }} 
+                            /> 
             } 
         </main>
 

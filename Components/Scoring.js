@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function Scoring( {_players, _pars, _holeHandicaps} ) {
+export default function Scoring( { _players, _pars, _holeHandicaps, onPlayersChange, onLeaderboardChange } ) {
   const classes = useStyles()
 
   const [postButtonText, setPostButtonText] = React.useState('POST')
@@ -51,9 +51,10 @@ export default function Scoring( {_players, _pars, _holeHandicaps} ) {
   const [hole, setHole] = useState(1)
   const [focus, setFocus] = useState([true, false, false, false])
   const [currentPlayer, setCurrentPlayer] = useState('')
-  const [lastPlayer, setLastPlayer] = useState('scorer')
+  const [lastPlayer, setLastPlayer] = useState('')
   const [par, setPars] = useState(_pars)
   const [hdcp, setHdcps] = useState(_holeHandicaps)
+  const [leaderboard, setLeaderboard] = useState([])
 
   const holeHasZeroScore = (hole, lastPlayer, players) => {
     let retval = false
@@ -85,10 +86,11 @@ export default function Scoring( {_players, _pars, _holeHandicaps} ) {
         if (json.hasOwnProperty('message')) {
           const newMessage = json.message;
           console.log('newMessage: ', newMessage)
-          const newData = json.data;
-          console.log('newData: ', newData)
+          const newLeaderboard = json.leaderboard;
+          console.log('newLeaderboard: ', newLeaderboard)
           if (newMessage == 'All Scores Updated') {
-            //loadData();
+          const withNet = constants.calculateNet(json.leaderboard, par, hdcp)
+          setLeaderboard(withNet)
           }
         };
       } catch (error) {
@@ -116,30 +118,31 @@ export default function Scoring( {_players, _pars, _holeHandicaps} ) {
   
   useEffect(() => {
     setPlayers(_players)
-    // console.log('_players: ', _players)
-    // console.log('players: ', players)
-    let newLastPlayer = 'partner3'
-    if (_players.partner3.player_name.length === 0) newLastPlayer = 'partner2'
-    if (_players.partner2.player_name.length === 0) newLastPlayer = 'partner1'
-    if (_players.partner1.player_name.length === 0) newLastPlayer = 'scorer'
-    setLastPlayer(newLastPlayer)
-    console.log('lastPlayer: ', newLastPlayer)
+
+    if (lastPlayer.length === 0) {
+      let newLastPlayer = 'partner3'
+      if (_players.partner3.player_name.length === 0) newLastPlayer = 'partner2'
+      if (_players.partner2.player_name.length === 0) newLastPlayer = 'partner1'
+      if (_players.partner1.player_name.length === 0) newLastPlayer = 'scorer'
+      setLastPlayer(newLastPlayer)
+      console.log('lastPlayer: ', newLastPlayer)
 
 
-    //set current holenum
-    //if hole 1 scores are 0 and others are not 0, it is probably a shotgun start
-    const firstHoleWithZeroScore = 0
-    for (let i = 1; i < 20; i++) {
-      if (holeHasZeroScore(i, newLastPlayer, _players)) {
-        firstHoleWithZeroScore = i
-        i = 20
+      //set current holenum
+      //if hole 1 scores are 0 and others are not 0, it is probably a shotgun start
+      const firstHoleWithZeroScore = 0
+      for (let i = 1; i < 20; i++) {
+        if (holeHasZeroScore(i, newLastPlayer, _players)) {
+          firstHoleWithZeroScore = i
+          i = 20
+        }
+        if (i === 19) {
+          i = 1
+        }
       }
-      if (i === 19) {
-        i = 1
-      }
+      console.log('SCORE useEffect _players - setHole')
+      setHole(firstHoleWithZeroScore)
     }
-    setHole(firstHoleWithZeroScore)
-
   },[_players]);
 
   useEffect(() => {
@@ -160,6 +163,12 @@ export default function Scoring( {_players, _pars, _holeHandicaps} ) {
   },[_holeHandicaps]);
 
   useEffect(() => {
+    onLeaderboardChange(leaderboard)
+  },[leaderboard])
+  
+  useEffect(() => {
+    //Return the new players up to the parent
+    onPlayersChange(players)
     localStorage.setItem(constants.NoKaOiPlayers, JSON.stringify(players));
   },[players]);
 
