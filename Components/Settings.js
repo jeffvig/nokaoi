@@ -40,7 +40,7 @@ export default function Settings( {_players, allPlayers, onPlayersChange} ) {
   },[_players]);
 
   useEffect(() => {
-    console.log('Settings - useEffect players: ', players)
+    //console.log('Settings - useEffect players: ', players)
   },[players]);
 
   const fetchPairingPartners = (scorer_name, scorer_pairing) => {

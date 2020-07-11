@@ -97,7 +97,7 @@ export default function Leaderboard( {_leaderboard, _flight, _pars, _holeHandica
 
   useEffect(() => {
     setHdcps(_holeHandicaps)
-    console.log('LB UE _holeHandicaps: ', _holeHandicaps)
+    //console.log('LB UE _holeHandicaps: ', _holeHandicaps)
   },[_holeHandicaps]);
 
   useEffect(() => {

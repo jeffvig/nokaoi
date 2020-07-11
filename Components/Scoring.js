@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function Scoring( { _players, _pars, _holeHandicaps, onPlayersChange, onLeaderboardChange } ) {
+export default function Scoring( { _players, _pars, _holeHandicaps, _leaderboard, onPlayersChange, onLeaderboardChange } ) {
   const classes = useStyles()
 
   const [postButtonText, setPostButtonText] = React.useState('POST')
@@ -54,7 +54,7 @@ export default function Scoring( { _players, _pars, _holeHandicaps, onPlayersCha
   const [lastPlayer, setLastPlayer] = useState('')
   const [par, setPars] = useState(_pars)
   const [hdcp, setHdcps] = useState(_holeHandicaps)
-  const [leaderboard, setLeaderboard] = useState([])
+  const [leaderboard, setLeaderboard] = useState(_leaderboard)
 
   const holeHasZeroScore = (hole, lastPlayer, players) => {
     let retval = false
@@ -125,7 +125,7 @@ export default function Scoring( { _players, _pars, _holeHandicaps, onPlayersCha
       if (_players.partner2.player_name.length === 0) newLastPlayer = 'partner1'
       if (_players.partner1.player_name.length === 0) newLastPlayer = 'scorer'
       setLastPlayer(newLastPlayer)
-      console.log('lastPlayer: ', newLastPlayer)
+      //console.log('lastPlayer: ', newLastPlayer)
 
 
       //set current holenum
@@ -140,13 +140,13 @@ export default function Scoring( { _players, _pars, _holeHandicaps, onPlayersCha
           i = 1
         }
       }
-      console.log('SCORE useEffect _players - setHole')
+      //console.log('SCORE useEffect _players - setHole')
       setHole(firstHoleWithZeroScore)
     }
   },[_players]);
 
   useEffect(() => {
-    console.log('useEffect loading: ', loading)
+    //console.log('useEffect loading: ', loading)
     if (loading) {
       setPostButtonText('...')
     } else {
@@ -163,7 +163,12 @@ export default function Scoring( { _players, _pars, _holeHandicaps, onPlayersCha
   },[_holeHandicaps]);
 
   useEffect(() => {
+    setLeaderboard(_leaderboard)
+  },[_leaderboard])
+  
+  useEffect(() => {
     onLeaderboardChange(leaderboard)
+    //console.log('SCORE UE onLeaderboardChange: ', JSON.stringify(leaderboard))
   },[leaderboard])
   
   useEffect(() => {
@@ -195,6 +200,9 @@ export default function Scoring( { _players, _pars, _holeHandicaps, onPlayersCha
     //const currentPlayer = xplayers.map(function(e) { return e.focus; }).indexOf(true)
     switch(e.currentTarget.innerText.toUpperCase()) {
       case "UNDO":
+        let totals = ''
+        totals += scoreer.player_name
+        alert(totals)
         break;
       case "POST":
         postData()
@@ -380,7 +388,7 @@ export default function Scoring( { _players, _pars, _holeHandicaps, onPlayersCha
               <Button variant='outlined' className={classes.numberButtons} onClick={handleNumberButtonClick}>9</Button>
             </TableRow>
             <TableRow>
-              <Button variant='outlined' className={classes.numberButtons} onClick={handleNumberButtonClick}>Undo</Button>
+              <Button variant='outlined' className={classes.numberButtons} onClick={handleNumberButtonClick}>UNDO</Button>
               <Button variant='outlined' className={classes.numberButtons} onClick={handleNumberButtonClick}>0</Button>
               <Button variant='outlined' className={classes.numberButtons} onClick={handleNumberButtonClick}>{postButtonText}</Button>
             </TableRow>

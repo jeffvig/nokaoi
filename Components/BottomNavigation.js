@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import Scoring from './Scoring'
+import Scorecard from './Scorecard'
 import Leaderboard from './Leaderboard'
 import Settings from './Settings'
 import * as constants from '../constants';
@@ -42,7 +43,7 @@ export default function BottomNavigation() {
 
   const classes = useStyles()
 
-  const [value, setValue] = useState(2)
+  const [value, setValue] = useState(3)
   const [response, setResponse] = React.useState(null)
   const [error, setError] = React.useState(null)
   const [empty, setEmpty] = useState(false)
@@ -188,11 +189,11 @@ export default function BottomNavigation() {
   },[pars])
   
   useEffect(() => {
-    console.log('new handicaps: ', hdcps)
+    //console.log('new handicaps: ', hdcps)
   },[hdcps])
   
   useEffect(() => {
-    console.log('new handicaps loading: ', hdcpLoading)
+    //console.log('new handicaps loading: ', hdcpLoading)
   },[hdcpLoading])
   
   useEffect(() => {
@@ -204,13 +205,13 @@ export default function BottomNavigation() {
   },[allPlayers])
   
   const onplayerschanges = (playerList) => {
-    console.log('bottomNav received: ', playerList)
+    //console.log('bottomNav received: ', playerList)
     setPlayers(playerList)
     setValue(0)
   }
     
   const onleaderboardchanges = (_leaderboard) => {
-    console.log('bottomNav received new leaderboard: ', JSON.stringify(_leaderboard))
+    //console.log('bottomNav received new leaderboard: ', JSON.stringify(_leaderboard))
     setLeaderboard(_leaderboard)
   }
     
@@ -223,18 +224,26 @@ export default function BottomNavigation() {
                               _players={players} 
                               _pars={pars}
                               _holeHandicaps={hdcps}
+                              _leaderboard={leaderboard}
                               onPlayersChange={(e) => { onplayerschanges(e) }} 
                               onLeaderboardChange={(e) => { onleaderboardchanges(e) }} 
                             /> 
             } 
-            {value === 1 && <Leaderboard 
+            {value === 1 && <Scorecard 
                               _leaderboard={leaderboard}
                               _flight={players.scorer.division}
                               _pars={pars}
                               _holeHandicaps={hdcps}
                               onLeaderboardChange={(e) => { onleaderboardchanges(e) }} 
                             /> } 
-            {value === 2 && <Settings 
+            {value === 2 && <Leaderboard 
+                              _leaderboard={leaderboard}
+                              _flight={players.scorer.division}
+                              _pars={pars}
+                              _holeHandicaps={hdcps}
+                              onLeaderboardChange={(e) => { onleaderboardchanges(e) }} 
+                            /> } 
+            {value === 3 && <Settings 
                               _players={players} 
                               allPlayers={allPlayers} 
                               onPlayersChange={(e) => { onplayerschanges(e) }} 
@@ -251,7 +260,8 @@ export default function BottomNavigation() {
           showLabels
           className={classes.root}
         >
-          <BottomNavigationAction label="Scoring"/>
+          <BottomNavigationAction label="Scores"/>
+          <BottomNavigationAction label="Totals"/>
           <BottomNavigationAction label="Leaderboard"/>
           <BottomNavigationAction label="Settings"/>
         </BottomNavigation>
