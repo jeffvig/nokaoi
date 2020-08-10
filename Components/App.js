@@ -1,11 +1,11 @@
 import React, { Fragment } from 'react';
-import BottomNavigation from './BottomNavigation'
+import BtmNav from './BtmNav'
 
 export default function App() {
 
   return (
     <Fragment>
-      <BottomNavigation />
+      <BtmNav />
     </Fragment>
   )
 }

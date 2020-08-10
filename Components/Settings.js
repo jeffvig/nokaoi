@@ -57,7 +57,7 @@ export default function Settings( {_players, allPlayers, onPlayersChange} ) {
     console.log('cacheScorerHandle: ', cacheScorerHandle)
     //console.log('scorer: ', scorer)
     if (cacheScorerHandle.length > 0) {
-      setScorer((players.find( player => player.player_name === cacheScorerHandle )))
+      setScorer((players.find(player => player.player_name === cacheScorerHandle)))
       console.log('useEffect single Settings: setting scorer to ', cacheScorerHandle)
     }
     
@@ -111,7 +111,6 @@ export default function Settings( {_players, allPlayers, onPlayersChange} ) {
     const partner1 = players.partner1
     const partner2 = players.partner2
     const partner3 = players.partner3
-    const partnerList = []
     console.log('handleSaveButtonClick 3')
     if (partner1.player_name.length > 0) partnerList.push(partner1)
     if (partner2.player_name.length > 0) partnerList.push(partner2)

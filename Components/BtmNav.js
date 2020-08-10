@@ -38,7 +38,7 @@ const useStyles = makeStyles({
   }
 });
 
-export default function BottomNavigation() {
+export default function BtmNav() {
 
   const classes = useStyles()
 
