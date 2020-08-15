@@ -38,7 +38,7 @@ const useStyles = makeStyles({
   }
 });
 
-export default function BtmNav() {
+export default function BtnNav() {
 
   const classes = useStyles()
 
@@ -81,7 +81,7 @@ export default function BtmNav() {
 
     const holenum = 18
     const playernum = 'partner3'
-    ysetPlayers(prevState => ({
+    setPlayers(prevState => ({
       ...prevState, 
         [playernum]: {
           ...prevState[playernum], 

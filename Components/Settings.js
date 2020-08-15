@@ -53,29 +53,29 @@ export default function Settings( {_players, allPlayers, onPlayersChange} ) {
 
   const fetchCache = (players) => {
 
-    const cacheScorerHandle = localStorage.getItem("scorerHandle")
-    console.log('cacheScorerHandle: ', cacheScorerHandle)
-    //console.log('scorer: ', scorer)
-    if (cacheScorerHandle.length > 0) {
-      setScorer((players.find(player => player.player_name === cacheScorerHandle)))
-      console.log('useEffect single Settings: setting scorer to ', cacheScorerHandle)
-    }
+    // const cacheScorerHandle = localStorage.getItem("scorerHandle")
+    // console.log('cacheScorerHandle: ', cacheScorerHandle)
+    // //console.log('scorer: ', scorer)
+    // if (cacheScorerHandle.length > 0) {
+    //   setScorer((players.find(player => player.player_name === cacheScorerHandle)))
+    //   console.log('useEffect single Settings: setting scorer to ', cacheScorerHandle)
+    // }
     
     const today = new Date().toJSON().slice(0,10).replace(/-/g,'/')
     const NoKaOiSaveDate = ( localStorage.getItem(constants.NoKaOiSaveDate) === null ? '01/01/1900' : localStorage.getItem(constants.NoKaOiSaveDate))
 
     if (NoKaOiSaveDate === today) {
       //If the settings were saved today, grab them out of the cache
-      const cachePartner1Handle = localStorage.getItem("Partner1Handle")
-      const cachePartner2Handle = localStorage.getItem("Partner2Handle")
-      const cachePartner3Handle = localStorage.getItem("Partner3Handle")
-      if (cachePartner1Handle.length > 0) setPartner1(players.find( player => player.player_name === cachePartner1Handle ))
-      if (cachePartner2Handle.length > 0) setPartner2(players.find( player => player.player_name === cachePartner2Handle ))
-      if (cachePartner3Handle.length > 0) setPartner3(players.find( player => player.player_name === cachePartner3Handle ))
+      // const cachePartner1Handle = localStorage.getItem("Partner1Handle")
+      // const cachePartner2Handle = localStorage.getItem("Partner2Handle")
+      // const cachePartner3Handle = localStorage.getItem("Partner3Handle")
+      // if (cachePartner1Handle.length > 0) setPartner1(players.find( player => player.player_name === cachePartner1Handle ))
+      // if (cachePartner2Handle.length > 0) setPartner2(players.find( player => player.player_name === cachePartner2Handle ))
+      // if (cachePartner3Handle.length > 0) setPartner3(players.find( player => player.player_name === cachePartner3Handle ))
     } else {
       //If the settings are not from today, pull the other players from the pairings
-      console.log('calling fetchPairingPartners from fetchCache')
-      fetchPairingPartners(cacheScorerHandle, players)
+      //console.log('calling fetchPairingPartners from fetchCache')
+      //fetchPairingPartners(cacheScorerHandle, players)
     }
 
   }
@@ -122,7 +122,7 @@ export default function Settings( {_players, allPlayers, onPlayersChange} ) {
     // updatePlayer('partner3', constants.empty_player)
     console.log('handleSaveButtonClick 5')
     let newPlayers = {}
-    console.log('...players.scorer: ', ...players.scorer)
+    //console.log('...players.scorer: ', ...players.scorer)
     if (partnerList.length === 0) newPlayers = {'scorer' : {...players.scorer}, 'partner1' : {...constants.empty_player}, 'partner2' : {...constants.empty_player}, 'partner3' : {...constants.empty_player}}
     if (partnerList.length === 1) newPlayers = {'scorer' : {...players.scorer}, 'partner1' : {...partnerList[0]}, 'partner2' : {...constants.empty_player}, 'partner3' : {...constants.empty_player}}
     if (partnerList.length === 2) newPlayers = {'scorer' : {...players.scorer}, 'partner1' : {...partnerList[0]}, 'partner2' : {...partnerList[1]}, 'partner3' : {...constants.empty_player}}

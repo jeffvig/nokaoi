@@ -5,7 +5,6 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
-import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
 import TextField from "@material-ui/core/TextField";
 import AppBar from '@material-ui/core/AppBar'
@@ -144,7 +143,7 @@ export default function Scoring( { _players, _pars, _holeHandicaps, _leaderboard
 
       //set current holenum
       //if hole 1 scores are 0 and others are not 0, it is probably a shotgun start
-      const firstHoleWithZeroScore = 0
+      let firstHoleWithZeroScore = 0
       for (let i = 1; i < 20; i++) {
         if (holeHasZeroScore(i, newLastPlayer, _players)) {
           firstHoleWithZeroScore = i
@@ -225,8 +224,8 @@ export default function Scoring( { _players, _pars, _holeHandicaps, _leaderboard
         break;
       default:
         if (currentPlayer.length > 0 ) {
-          const oldScore = players[currentPlayer].score[hole]
-          const newScore = ''
+          let oldScore = players[currentPlayer].score[hole]
+          let newScore = ''
           if (oldScore === 1) {
             newScore = '1' + e.currentTarget.innerText
             setScore(newScore)
@@ -246,7 +245,7 @@ export default function Scoring( { _players, _pars, _holeHandicaps, _leaderboard
     setOpen(false);
   };
 
-  const isInFocus = (id) => (xplayers[id].focus === true ? 'contained' : 'outlined')
+  const isInFocus = (id) => (players[id].focus === true ? 'contained' : 'outlined')
 
   const partner1disabled = (lastPlayer === 'scorer')
   const partner2disabled = (lastPlayer === 'scorer' || lastPlayer === 'partner1')
@@ -426,7 +425,7 @@ export default function Scoring( { _players, _pars, _holeHandicaps, _leaderboard
         scroll='paper'
       >
         <DialogTitle id="scroll-dialog-title">Scorecard</DialogTitle>
-        <DialogContent dividers={scroll === 'paper'}>
+        <DialogContent dividers={true}>
           <DialogContentText
             id="scroll-dialog-description"
             tabIndex={-1}
